@@ -144,9 +144,15 @@ scope = [
 
 @st.cache_resource
 def get_client():
-    creds = ServiceAccountCredentials.from_json_keyfile_name(
-        "credentials.json", scope
+    import json
+
+    creds_dict = json.loads(st.secrets["gcp_service_account"])
+
+    creds = ServiceAccountCredentials.from_json_keyfile_dict(
+        creds_dict,
+        scope
     )
+
     return gspread.authorize(creds)
 
 client = get_client()
